@@ -1,50 +1,32 @@
-import {Game, System, Input, Window, Graphics} from 'cleo';
+import { Game, System, Input, Window, Graphics } from 'cleo';
+import { Player } from './player.js';
+import { Sprite } from './sprite.js';
 const {Texture} = Graphics;
-Window.setStats('xylophone', 1920, 1080);
+Window.setStats('xylophone', 1920/2, 1080/2);
 
-const player = {
-    x: 0,
-    y: 0,
-    speed: 100,
-    spr: null,
-    sprOptions:{
-        width: 24*4,
-        height: 24*4,
-        sx:24,
-        sy:0,
-        sw:-24,
-        sh:24,
-    }
-}
-let floorSpr;
-const tile = {
-    width:16,
-    height:16,
-    sx:16*19,
-    sy:16*16,
-    sw:16,
-    sh:16,
-}
-let background0;
-const bgOptions = {}
-
-function drawBackground(){
-    background0.setTarget();
-    for(let x = 0; x < background0.width; x+=tile.width){    
-        for(let y = 0; y < background0.width; y+=tile.height){
-            floorSpr.draw(x,y,tile);
-        }
-    }
-    background0.resetTarget();
-}
+let player;
+let floorTile;
+let frameBuffer;
 
 Game.init = ()=>{
-    player.spr = Texture.fromFile('./sprites/characters_packed.png');
-    floorSpr = Texture.fromFile('./sprites/TilesetInteriorFloor.png');
-    background0 = Texture.new(1920/4,1080/4);
-    drawBackground();
-    bgOptions.width = Window.width;
-    bgOptions.height = Window.height;
+    player = new Player();
+    player.spr = Texture.fromFile('./sprites/SpriteSheet.png');
+    floorTile = new Sprite();
+    floorTile.setProps({
+        spr: Texture.fromFile('./sprites/TilesetInteriorFloor.png'),
+        width:16,
+        height:16,
+        sx:16*19,
+        sy:16*16,
+        sw:16,
+        sh:16,
+    });
+    frameBuffer = new Sprite();
+    frameBuffer.setProps({
+        spr: Texture.new(1920/8,1080/8),
+        width: Window.width,
+        height: Window.height,
+    });
 }
 
 Game.update = (dt)=>{
@@ -56,7 +38,20 @@ Game.update = (dt)=>{
 }
 
 Game.draw = ()=>{
-    // floorSpr.draw(0,0,tile);
-    background0.draw(0,0,bgOptions);
-    player.spr.draw(player.x,player.y, player.sprOptions);
+    frameBuffer.spr.setTarget();
+    Graphics.clear();
+    drawBackground();
+    player.draw();
+    frameBuffer.spr.resetTarget();
+    frameBuffer.draw(0,0);
+}
+
+function drawBackground(){
+    // frameBuffer.spr.setTarget();
+    for(let x = 0; x < frameBuffer.spr.width; x+=floorTile.width){    
+        for(let y = 0; y < frameBuffer.spr.height; y+=floorTile.height){
+            floorTile.draw(x,y);
+        }
+    }
+    // frameBuffer.spr.resetTarget();
 }
