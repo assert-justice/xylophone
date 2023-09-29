@@ -31,10 +31,11 @@ Game.init = ()=>{
 
 Game.update = (dt)=>{
     if(Input.keyIsDown(256)) Game.quit();
-    if(Input.keyIsDown(262)) player.x += player.speed * dt;
-    if(Input.keyIsDown(263)) player.x -= player.speed * dt;
-    if(Input.joyButtonIsDown(0,12)) player.x += player.speed * dt;
-    if(Input.joyButtonIsDown(0,14)) player.x -= player.speed * dt;
+    player.update(dt);
+    // if(Input.keyIsDown(262)) player.x += player.speed * dt;
+    // if(Input.keyIsDown(263)) player.x -= player.speed * dt;
+    // if(Input.joyButtonIsDown(0,12)) player.x += player.speed * dt;
+    // if(Input.joyButtonIsDown(0,14)) player.x -= player.speed * dt;
 }
 
 Game.draw = ()=>{

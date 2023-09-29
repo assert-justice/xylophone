@@ -1,8 +1,11 @@
+import { System } from 'cleo';
 import { Sprite } from "./sprite.js";
+import { Vec2 } from "./la.js";
+import { InputMap } from "./input_map.js";
 
 export class Player {
-    x =  0;
-    y =  0;
+    position = new Vec2();
+    input = new InputMap();
     speed =  100;
     _spr;
     constructor(){
@@ -15,15 +18,21 @@ export class Player {
             sw: 16,
             sh: 16,
         });
-        // this._spr.width =  24*4;
-        // this._spr.height =  24*4;
-        // this._spr.sx = 24;
-        // this._spr.sy = 0;
-        // this._spr.sw = -24;
-        // this._spr.sh = 24;
     }
     set spr(spr){this._spr.spr=spr};
     draw(){
-        this._spr.draw(this.x, this.y);
+        this._spr.draw(this.position.x, this.position.y);
+    }
+    update(dt){
+        const velocity = this.input.getMove().mul(dt * this.speed);
+        // System.println('vel:', velocity.x);
+        const roomWidth = 240;
+        const roomHeight = 135;
+        const tileWidth = 16;
+        this.position.add(velocity);
+        if(this.position.x < 0) this.position.x = 0;
+        if(this.position.x > roomWidth-tileWidth) this.position.x = roomWidth-tileWidth;
+        if(this.position.y < 0) this.position.y = 0;
+        if(this.position.y > roomHeight-tileWidth) this.position.y = roomHeight-tileWidth;
     }
 }
