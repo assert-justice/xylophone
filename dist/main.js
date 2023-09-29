@@ -14,7 +14,7 @@ const player = {
     }
 }
 Game.init = ()=>{
-    player.spr = Texture.fromFile('characters_packed.png');
+    player.spr = Texture.fromFile('./sprites/characters_packed.png');
 }
 
 Game.update = (dt)=>{
