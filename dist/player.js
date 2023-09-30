@@ -25,7 +25,6 @@ export class Player {
     }
     update(dt){
         const velocity = this.input.getMove().mul(dt * this.speed);
-        // System.println('vel:', velocity.x);
         const roomWidth = 240;
         const roomHeight = 135;
         const tileWidth = 16;

@@ -2,11 +2,16 @@ import { Game, System, Input, Window, Graphics } from 'cleo';
 import { Player } from './player.js';
 import { Sprite } from './sprite.js';
 const {Texture} = Graphics;
-Window.setStats('xylophone', 1920/2, 1080/2);
+const tileWidth = 16;
+const roomWidth = 18;
+const roomHeight = 12;
+Window.setStats('xylophone', roomWidth*tileWidth*4, roomHeight*tileWidth*4);
 
 let player;
 let floorTile;
 let frameBuffer;
+let wallTile;
+let bg0, bg1;
 
 Game.init = ()=>{
     player = new Player();
@@ -16,14 +21,26 @@ Game.init = ()=>{
         spr: Texture.fromFile('./sprites/TilesetInteriorFloor.png'),
         width:16,
         height:16,
-        sx:16*19,
-        sy:16*16,
+        sx:16*14,
+        sy:16*15,
         sw:16,
         sh:16,
     });
+    wallTile = new Sprite();
+    wallTile.setProps({
+        spr: Texture.fromFile('./sprites/TilesetWallSimple.png'),
+        width:16,
+        height:16,
+        // sx:16*19,
+        // sy:16*16,
+        sw:16,
+        sh:16,
+    });
+    bg0 = Texture.new(roomWidth*tileWidth, roomHeight*tileWidth);
+    drawBackground(bg0);
     frameBuffer = new Sprite();
     frameBuffer.setProps({
-        spr: Texture.new(1920/8,1080/8),
+        spr: Texture.new(roomWidth*tileWidth, roomHeight*tileWidth),
         width: Window.width,
         height: Window.height,
     });
@@ -41,18 +58,19 @@ Game.update = (dt)=>{
 Game.draw = ()=>{
     frameBuffer.spr.setTarget();
     Graphics.clear();
-    drawBackground();
+    // drawBackground();
+    bg0.draw(0,0);
     player.draw();
     frameBuffer.spr.resetTarget();
     frameBuffer.draw(0,0);
 }
 
-function drawBackground(){
-    // frameBuffer.spr.setTarget();
-    for(let x = 0; x < frameBuffer.spr.width; x+=floorTile.width){    
-        for(let y = 0; y < frameBuffer.spr.height; y+=floorTile.height){
+function drawBackground(bg){
+    bg.setTarget();
+    for(let x = 0; x < bg.width; x+=floorTile.width){    
+        for(let y = 0; y < bg.height; y+=floorTile.height){
             floorTile.draw(x,y);
         }
     }
-    // frameBuffer.spr.resetTarget();
+    bg.resetTarget();
 }
