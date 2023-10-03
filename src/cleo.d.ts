@@ -5,18 +5,29 @@ declare module "cleo" {
         function writeFile(path:string,text:string):void;
     }
     export class Game{
-        static init: ()=>{};
-        static update: (dt:number)=>{};
-        static draw: ()=>{};
+        static init: ()=>void;
+        static update: (dt:number)=>void;
+        static draw: ()=>void;
         static quit():void;
     }
     export namespace Graphics{
         function setClearColor(r: number, g: number, b: number, a:number);
         function clear():void;
+        interface TextureParams{
+            width?: number;
+            height?: number;
+            sx?: number;
+            sy?: number;
+            sw?: number;
+            sh?: number;
+            ox?: number;
+            oy?: number;
+            
+        }
         class Texture{
             width:number;
             height:number;
-            draw(x:number, y:number): void;
+            draw(x:number, y:number, options?: TextureParams): void;
             static fromFile(path: string): Texture;
             static new(width: number, height: number): Texture;
             setTarget():void;
@@ -26,7 +37,7 @@ declare module "cleo" {
     export class Window{
         static get width():number;
         static get height():number;
-        static setStats(name: string, width:number, height:number, mode: string, monitor: number)
+        static setStats(name: string, width:number, height:number, mode?: string, monitor?: number)
         static vsync: boolean;
 
     }
