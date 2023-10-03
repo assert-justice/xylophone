@@ -4,15 +4,13 @@
   "description": "Sample game for cleo engine.",
   "main": "index.js",
   "scripts": {
+    "start:win": "cd dist && tsc && cleo.exe",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^20.8.0",
-    "tsc": "^2.0.4",
-    "typescript": "^5.2.2",
-    "cleo": "0.0.0"
+    "typescript": "^5.2.2"
   }
 }
