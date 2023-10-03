@@ -24,6 +24,7 @@ Game.update = (dt:number)=>{
     if(Input.keyIsDown(256)) Game.quit();
     GameState.player.update(dt);
 }
+
 Game.draw = ()=>{
     GameState.fb.tex.setTarget();
     GameState.room.draw();
