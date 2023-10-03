@@ -3,10 +3,10 @@ import { Sprite } from "./sprite.js";
 import { HashGrid2D } from './hash_grid';
 import { roomHeight, roomWidth, tileWidth } from './constants';
 import { Vec2 } from './la';
+import { GameState } from './game_state';
 
 export class Room{
     bg: Graphics.Texture;
-    grid: HashGrid2D<number>;
     floorTile;
     wallTile;
     wallCoords = {
@@ -29,7 +29,6 @@ export class Room{
     }
     constructor(){
         this.bg = Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth);
-        this.grid = new HashGrid2D<number>(0);
         this.floorTile = new Sprite(
             Graphics.Texture.fromFile('./sprites/TilesetInteriorFloor.png'));
         this.floorTile.setProps({
@@ -55,6 +54,7 @@ export class Room{
     }
     private drawStatic(){
         this.bg.setTarget();
+        GameState.grid.data.clear();
         for(let x = 0; x < roomWidth; x++){
             for(let y = 0; y < roomHeight; y++){
                 let coord:number[] = [0,0];
@@ -74,7 +74,7 @@ export class Room{
                 }
                 else if(y === 0) coord = this.wallCoords.u;
                 else if(y === roomHeight-1) coord = this.wallCoords.d;
-                this.grid.set(x, y, 1);
+                GameState.grid.set(x, y, 1);
                 this.wallTile.props.sx = coord[0] * tileWidth;
                 this.wallTile.props.sy = coord[1] * tileWidth;
                 this.wallTile.draw(x*tileWidth, y*tileWidth);

@@ -4,6 +4,7 @@ import { Room } from './room';
 import { Sprite } from './sprite';
 import { roomHeight, roomWidth, tileWidth } from './constants';
 import { GameState } from './game_state';
+import { HashGrid2D } from './hash_grid';
 
 Window.setStats('xylophone', roomWidth*tileWidth*2, roomHeight*tileWidth*2);
 
@@ -13,9 +14,9 @@ Game.init = ()=>{
     GameState.fb.setProps({width: Window.width,
         height: Window.height,
     });
+    GameState.grid = new HashGrid2D<number>(0);
     GameState.room = new Room();
     GameState.player = new Player();
-    GameState.player.grid = GameState.room.grid;
     GameState.player.position.x = 100; GameState.player.position.y = 100;
     GameState.selectionTex = Graphics.Texture.fromFile('./sprites/selection.png');
 }

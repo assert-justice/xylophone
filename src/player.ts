@@ -4,6 +4,7 @@ import { Vec2 } from "./la";
 import { InputMap } from "./input_map";
 import { HashGrid2D } from './hash_grid';
 import { tileWidth, roomWidth, roomHeight } from './constants';
+import { GameState } from './game_state';
 const { Texture } = Graphics;
 
 export class Player {
@@ -11,9 +12,7 @@ export class Player {
     input = new InputMap();
     speed = 300;
     spr: Sprite;
-    grid: HashGrid2D<number>;
     constructor(){
-        this.grid = new HashGrid2D<number>(0);
         const tex = Texture.fromFile('./sprites/SpriteSheet.png');
         this.spr = new Sprite(tex);
         this.spr.setProps({
@@ -32,7 +31,7 @@ export class Player {
     }
     isSolid(cx: number, cy: number): boolean{
         if(!this.onGrid(cx, cy)) return true;
-        return this.grid.get(cx, cy) > 0;
+        return GameState.grid.get(cx, cy) > 0;
     }
     toCoord(x: number, y: number){
         return [
