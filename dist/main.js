@@ -1,4 +1,4 @@
-import { System, Game, Window, Graphics, Input } from 'cleo';
+import { Game, Window, Graphics, Input } from 'cleo';
 import { Player } from './player';
 import { Room } from './room';
 import { Sprite } from './sprite';
@@ -28,7 +28,6 @@ Game.draw = () => {
     GameState.room.draw();
     GameState.player.draw();
     const [mx, my] = GameState.toCoord(Input.mouseX / 2, Input.mouseY / 2);
-    System.println(mx, my);
     GameState.selectionTex.draw(mx * tileWidth, my * tileWidth);
     GameState.fb.tex.resetTarget();
     GameState.fb.draw(0, 0);
