@@ -3,36 +3,29 @@ import { Player } from './player';
 import { Room } from './room';
 import { Sprite } from './sprite';
 import { roomHeight, roomWidth, tileWidth } from './constants';
-// state
+import { GameState } from './game_state';
 Window.setStats('xylophone', roomWidth * tileWidth * 2, roomHeight * tileWidth * 2);
-const players = [];
-const rooms = [];
-const fbs = [];
 Game.init = () => {
     const fbTex = Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth);
-    const fb = new Sprite(fbTex);
-    fb.setProps({ width: Window.width,
+    GameState.fb = new Sprite(fbTex);
+    GameState.fb.setProps({ width: Window.width,
         height: Window.height,
     });
-    fbs.push(fb);
-    const room = new Room();
-    const player = new Player();
-    player.grid = room.grid;
-    player.position.x = 100;
-    player.position.y = 100;
-    players.push(player);
-    rooms.push(room);
+    GameState.room = new Room();
+    GameState.player = new Player();
+    GameState.player.grid = GameState.room.grid;
+    GameState.player.position.x = 100;
+    GameState.player.position.y = 100;
 };
 Game.update = (dt) => {
     if (Input.keyIsDown(256))
         Game.quit();
-    players[0].update(dt);
-    // rooms[0].collide(players[0].position);
+    GameState.player.update(dt);
 };
 Game.draw = () => {
-    fbs[0].tex.setTarget();
-    rooms[0].draw();
-    players[0].draw();
-    fbs[0].tex.resetTarget();
-    fbs[0].draw(0, 0);
+    GameState.fb.tex.setTarget();
+    GameState.room.draw();
+    GameState.player.draw();
+    GameState.fb.tex.resetTarget();
+    GameState.fb.draw(0, 0);
 };

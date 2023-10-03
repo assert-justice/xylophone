@@ -25,8 +25,7 @@ export class Player {
     }
     update(dt) {
         const velocity = this.input.getMove().mul(dt * this.speed);
-        this.position = this.collide(velocity);
-        // this.position.add(velocity);
+        this.collide(velocity);
     }
     isSolid(cx, cy) {
         if (!this.onGrid(cx, cy))
@@ -40,8 +39,8 @@ export class Player {
         ];
     }
     collide(vel) {
-        const newPos = this.position.copy().add(vel);
         const [cx, cy] = this.toCoord(this.position.x, this.position.y);
+        this.position.add(vel);
         let minX = -Infinity;
         let maxX = Infinity;
         let minY = -Infinity;
@@ -54,9 +53,8 @@ export class Player {
             minY = cy * tileWidth;
         if (this.isSolid(cx, cy + 1))
             maxY = cy * tileWidth;
-        newPos.x = Math.min(maxX, Math.max(minX, newPos.x));
-        newPos.y = Math.min(maxY, Math.max(minY, newPos.y));
-        return newPos;
+        this.position.x = Math.min(maxX, Math.max(minX, this.position.x));
+        this.position.y = Math.min(maxY, Math.max(minY, this.position.y));
     }
     onGrid(cx, cy) {
         if (cx < 0 || cx >= roomWidth)
