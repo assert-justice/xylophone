@@ -2,12 +2,15 @@ import { Graphics } from 'cleo';
 import { Sprite } from "./sprite";
 import { Vec2 } from "./la";
 import { InputMap } from "./input_map";
+import { HashGrid2D } from './hash_grid';
+import { tileWidth, roomWidth, roomHeight } from './constants';
 const { Texture } = Graphics;
 export class Player {
     constructor() {
         this.position = new Vec2();
         this.input = new InputMap();
-        this.speed = 100;
+        this.speed = 300;
+        this.grid = new HashGrid2D(0);
         const tex = Texture.fromFile('./sprites/SpriteSheet.png');
         this.spr = new Sprite(tex);
         this.spr.setProps({
@@ -22,13 +25,44 @@ export class Player {
     }
     update(dt) {
         const velocity = this.input.getMove().mul(dt * this.speed);
-        // const roomWidth = 240;
-        // const roomHeight = 135;
-        // const tileWidth = 16;
-        this.position.add(velocity);
-        // if(this.position.x < 0) this.position.x = 0;
-        // if(this.position.x > roomWidth-tileWidth) this.position.x = roomWidth-tileWidth;
-        // if(this.position.y < 0) this.position.y = 0;
-        // if(this.position.y > roomHeight-tileWidth) this.position.y = roomHeight-tileWidth;
+        this.position = this.collide(velocity);
+        // this.position.add(velocity);
+    }
+    isSolid(cx, cy) {
+        if (!this.onGrid(cx, cy))
+            return true;
+        return this.grid.get(cx, cy) > 0;
+    }
+    toCoord(x, y) {
+        return [
+            Math.trunc(x / tileWidth),
+            Math.trunc(y / tileWidth),
+        ];
+    }
+    collide(vel) {
+        const newPos = this.position.copy().add(vel);
+        const [cx, cy] = this.toCoord(this.position.x, this.position.y);
+        let minX = -Infinity;
+        let maxX = Infinity;
+        let minY = -Infinity;
+        let maxY = Infinity;
+        if (this.isSolid(cx - 1, cy))
+            minX = cx * tileWidth;
+        if (this.isSolid(cx + 1, cy))
+            maxX = cx * tileWidth;
+        if (this.isSolid(cx, cy - 1))
+            minY = cy * tileWidth;
+        if (this.isSolid(cx, cy + 1))
+            maxY = cy * tileWidth;
+        newPos.x = Math.min(maxX, Math.max(minX, newPos.x));
+        newPos.y = Math.min(maxY, Math.max(minY, newPos.y));
+        return newPos;
+    }
+    onGrid(cx, cy) {
+        if (cx < 0 || cx >= roomWidth)
+            return false;
+        if (cy < 0 || cy >= roomHeight)
+            return false;
+        return true;
     }
 }

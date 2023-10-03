@@ -1,8 +1,9 @@
 import { Graphics } from 'cleo';
 import { Sprite } from "./sprite.js";
 import { HashGrid2D } from './hash_grid';
+import { roomHeight, roomWidth, tileWidth } from './constants';
 export class Room {
-    constructor(width, height, tileWidth) {
+    constructor() {
         this.wallCoords = {
             ulc: [0, 6],
             urc: [4, 6],
@@ -21,11 +22,8 @@ export class Room {
             dcl: [1, 10],
             dcr: [2, 10],
         };
-        this.bg = Graphics.Texture.new(width * tileWidth, height * tileWidth);
+        this.bg = Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth);
         this.grid = new HashGrid2D(0);
-        this.width = width;
-        this.height = height;
-        this.tileWidth = tileWidth;
         this.floorTile = new Sprite(Graphics.Texture.fromFile('./sprites/TilesetInteriorFloor.png'));
         this.floorTile.setProps({
             width: tileWidth,
@@ -44,57 +42,42 @@ export class Room {
         });
         this.drawStatic();
     }
-    toCoord(x, y) {
-        return [
-            Math.floor(x / this.tileWidth),
-            Math.floor(y / this.tileWidth),
-        ];
-    }
     draw() {
         this.bg.draw(0, 0);
     }
-    isSolid(cx, cy) {
-        return this.grid.get(cx, cy) > 0;
-    }
-    onGrid(cx, cy) {
-        if (cx < 0 || cx >= this.width)
-            return false;
-        if (cy < 0 || cy >= this.height)
-            return false;
-        return true;
-    }
     drawStatic() {
         this.bg.setTarget();
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < roomWidth; x++) {
+            for (let y = 0; y < roomHeight; y++) {
                 let coord = [0, 0];
-                if ((x > 0 && x < this.width - 1) && (y > 0 && y < this.height - 1)) {
-                    this.floorTile.draw(x * this.tileWidth, y * this.tileWidth);
+                if ((x > 0 && x < roomWidth - 1) && (y > 0 && y < roomHeight - 1)) {
+                    this.floorTile.draw(x * tileWidth, y * tileWidth);
                     continue;
                 }
                 else if (x === 0) {
                     if (y === 0)
                         coord = this.wallCoords.ulc;
-                    else if (y === this.height - 1)
+                    else if (y === roomHeight - 1)
                         coord = this.wallCoords.dlc;
                     else
                         coord = this.wallCoords.l;
                 }
-                else if (x === this.width - 1) {
+                else if (x === roomWidth - 1) {
                     if (y === 0)
                         coord = this.wallCoords.urc;
-                    else if (y === this.height - 1)
+                    else if (y === roomHeight - 1)
                         coord = this.wallCoords.drc;
                     else
                         coord = this.wallCoords.r;
                 }
                 else if (y === 0)
                     coord = this.wallCoords.u;
-                else if (y === this.height - 1)
+                else if (y === roomHeight - 1)
                     coord = this.wallCoords.d;
-                this.wallTile.props.sx = coord[0] * this.tileWidth;
-                this.wallTile.props.sy = coord[1] * this.tileWidth;
-                this.wallTile.draw(x * this.tileWidth, y * this.tileWidth);
+                this.grid.set(x, y, 1);
+                this.wallTile.props.sx = coord[0] * tileWidth;
+                this.wallTile.props.sy = coord[1] * tileWidth;
+                this.wallTile.draw(x * tileWidth, y * tileWidth);
             }
         }
         this.bg.resetTarget();

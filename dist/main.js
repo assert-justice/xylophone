@@ -2,12 +2,9 @@ import { Game, Window, Graphics, Input } from 'cleo';
 import { Player } from './player';
 import { Room } from './room';
 import { Sprite } from './sprite';
-// constants
-const tileWidth = 16;
-const roomWidth = 18;
-const roomHeight = 12;
+import { roomHeight, roomWidth, tileWidth } from './constants';
 // state
-Window.setStats('xylophone', roomWidth * tileWidth * 4, roomHeight * tileWidth * 4);
+Window.setStats('xylophone', roomWidth * tileWidth * 2, roomHeight * tileWidth * 2);
 const players = [];
 const rooms = [];
 const fbs = [];
@@ -18,13 +15,19 @@ Game.init = () => {
         height: Window.height,
     });
     fbs.push(fb);
-    players.push(new Player());
-    rooms.push(new Room(roomWidth, roomHeight, tileWidth));
+    const room = new Room();
+    const player = new Player();
+    player.grid = room.grid;
+    player.position.x = 100;
+    player.position.y = 100;
+    players.push(player);
+    rooms.push(room);
 };
 Game.update = (dt) => {
     if (Input.keyIsDown(256))
         Game.quit();
     players[0].update(dt);
+    // rooms[0].collide(players[0].position);
 };
 Game.draw = () => {
     fbs[0].tex.setTarget();
