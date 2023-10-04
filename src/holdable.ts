@@ -16,10 +16,13 @@ export class Holdable{
     }
     update(dt: number){
         if(this.isHeld()){
-            this.position = GameState.player.position.copy().add(this.offset);
+            this.position.x = GameState.player.position.x;
+            this.position.y = GameState.player.position.y;
         }
     }
     draw(){
-        this.spr.draw(this.position.x, this.position.y);
+        const pos = this.position.copy();
+        if(this.isHeld()) pos.add(this.offset);
+        this.spr.draw(pos.x, pos.y);
     }
 }

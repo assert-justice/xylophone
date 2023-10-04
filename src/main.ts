@@ -37,11 +37,11 @@ Game.draw = ()=>{
     GameState.fb.tex.setTarget();
     GameState.room.draw();
     GameState.player.draw();
-    const [mx,my] = GameState.toCoord(Input.mouseX/2, Input.mouseY/2);
-    GameState.selectionTex.draw(mx*tileWidth,my*tileWidth);
     for (const h of GameState.holdables) {
         h.draw();
     }
+    const [mx,my] = GameState.toCoord(Input.mouseX/2, Input.mouseY/2);
+    GameState.selectionTex.draw(mx*tileWidth,my*tileWidth);
     GameState.fb.tex.resetTarget();
     GameState.fb.draw(0,0);
 }

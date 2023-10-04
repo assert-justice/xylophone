@@ -28,7 +28,21 @@ export class Player {
         this.spr.draw(this.position.x, this.position.y);
     }
     update(dt: number){
-        const velocity = this.input.getMove().mul(dt * this.speed);
+        this.input.poll();
+        if(this.input.grabDown){
+            if(this.held) this.held = undefined;
+            else{
+                let minDis = 16;
+                for (const h of GameState.holdables) {
+                    const dis = this.position.dis(h.position);
+                    if(dis<minDis){
+                        this.held = h;
+                        minDis=dis;
+                    }
+                }
+            }
+        }
+        const velocity = this.input.move.mul(dt * this.speed);
         this.collide(velocity);
     }
     isSolid(cx: number, cy: number): boolean{
