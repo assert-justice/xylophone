@@ -1,6 +1,6 @@
 import { GameState } from "./game_state";
-import { Vec2 } from "./la";
-import { Sprite } from "./sprite";
+import { Vec2 } from "./cleo-utils/la";
+import { Sprite } from "./cleo-utils/sprite";
 
 export class Holdable{
     spr: Sprite;

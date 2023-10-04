@@ -1,8 +1,8 @@
 import { Graphics, System } from 'cleo';
-import { Sprite } from "./sprite.js";
-import { HashGrid2D } from './hash_grid';
+import { Sprite } from "./cleo-utils/sprite";
+import { HashGrid2D } from './cleo-utils/hash_grid';
 import { roomHeight, roomWidth, tileWidth } from './constants';
-import { Vec2 } from './la';
+import { Vec2 } from './cleo-utils/la';
 import { GameState } from './game_state';
 
 export class Room{

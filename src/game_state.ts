@@ -1,9 +1,9 @@
 import { Graphics } from "cleo";
 import { Player } from "./player";
 import { Room } from "./room";
-import { Sprite } from "./sprite";
+import { Sprite } from "./cleo-utils/sprite";
 import { tileWidth } from "./constants";
-import { HashGrid2D } from "./hash_grid";
+import { HashGrid2D } from "./cleo-utils/hash_grid";
 import { Holdable } from "./holdable";
 
 export class GameState{

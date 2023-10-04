@@ -1,5 +1,5 @@
 import { Input } from 'cleo'
-import { Vec2 } from './la.js';
+import { Vec2 } from './cleo-utils/la';
 
 const key = {
     right: 262,

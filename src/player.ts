@@ -1,8 +1,8 @@
 import { System, Graphics } from 'cleo';
-import { Sprite } from "./sprite";
-import { Vec2 } from "./la";
+import { Sprite } from "./cleo-utils/sprite";
+import { Vec2 } from "./cleo-utils/la";
 import { InputMap } from "./input_map";
-import { HashGrid2D } from './hash_grid';
+import { HashGrid2D } from './cleo-utils/hash_grid';
 import { tileWidth, roomWidth, roomHeight } from './constants';
 import { GameState } from './game_state';
 import { Holdable } from './holdable';

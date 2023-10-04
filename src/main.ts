@@ -1,10 +1,10 @@
 import { System, Game, Window, Graphics, Input } from 'cleo';
 import { Player } from './player';
 import { Room } from './room';
-import { Sprite } from './sprite';
+import { Sprite } from './cleo-utils/sprite';
 import { roomHeight, roomWidth, tileWidth } from './constants';
 import { GameState } from './game_state';
-import { HashGrid2D } from './hash_grid';
+import { HashGrid2D } from './cleo-utils/hash_grid';
 import { Chest } from './chest';
 
 Window.setStats('xylophone', roomWidth*tileWidth*2, roomHeight*tileWidth*2);
