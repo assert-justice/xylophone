@@ -54,7 +54,7 @@ export class Room{
     }
     private drawStatic(){
         this.bg.setTarget();
-        GameState.grid.data.clear();
+        // GameState.grid.data.clear();
         for(let x = 0; x < roomWidth; x++){
             for(let y = 0; y < roomHeight; y++){
                 let coord:number[] = [0,0];
@@ -74,7 +74,7 @@ export class Room{
                 }
                 else if(y === 0) coord = this.wallCoords.u;
                 else if(y === roomHeight-1) coord = this.wallCoords.d;
-                GameState.grid.set(x, y, 1);
+                // GameState.grid.set(x, y, 1);
                 this.wallTile.props.sx = coord[0] * tileWidth;
                 this.wallTile.props.sy = coord[1] * tileWidth;
                 this.wallTile.draw(x*tileWidth, y*tileWidth);

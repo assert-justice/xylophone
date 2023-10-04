@@ -4,8 +4,8 @@ import { Room } from './room';
 import { Sprite } from './cleo-utils/sprite';
 import { roomHeight, roomWidth, tileWidth } from './constants';
 import { GameState } from './game_state';
-import { HashGrid2D } from './cleo-utils/hash_grid';
 import { Chest } from './chest';
+import { RoomGrid } from './room_grid';
 
 Window.setStats('xylophone', roomWidth*tileWidth*2, roomHeight*tileWidth*2);
 
@@ -17,7 +17,7 @@ Game.init = ()=>{
     });
     const chest = new Chest();
     GameState.holdables = [chest];
-    GameState.grid = new HashGrid2D<number>(0);
+    GameState.grid = new RoomGrid();
     GameState.room = new Room();
     GameState.player = new Player();
     GameState.player.held = chest;
@@ -40,7 +40,7 @@ Game.draw = ()=>{
     for (const h of GameState.holdables) {
         h.draw();
     }
-    const [mx,my] = GameState.toCoord(Input.mouseX/2, Input.mouseY/2);
+    const [mx,my] = GameState.grid.toCoord(Input.mouseX/2, Input.mouseY/2);
     GameState.selectionTex.draw(mx*tileWidth,my*tileWidth);
     GameState.fb.tex.resetTarget();
     GameState.fb.draw(0,0);

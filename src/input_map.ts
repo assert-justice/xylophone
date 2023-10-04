@@ -20,7 +20,6 @@ export class InputMap{
     get grabDown(){
         return this._grab[0] && !this._grab[1];
     }
-    // _aim = new Vec2();
     poll(){
         this._move.x = 0;
         this._move.y = 0;

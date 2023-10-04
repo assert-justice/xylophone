@@ -3,20 +3,14 @@ import { Player } from "./player";
 import { Room } from "./room";
 import { Sprite } from "./cleo-utils/sprite";
 import { tileWidth } from "./constants";
-import { HashGrid2D } from "./cleo-utils/hash_grid";
 import { Holdable } from "./holdable";
+import { RoomGrid } from "./room_grid";
 
 export class GameState{
     static player: Player;
     static fb: Sprite;
     static room: Room;
     static selectionTex: Graphics.Texture;
-    static grid: HashGrid2D<number>;
+    static grid: RoomGrid;
     static holdables: Holdable[];
-    static toCoord(x: number, y: number){
-        return [
-            Math.trunc(x / tileWidth),
-            Math.trunc(y / tileWidth),
-        ];
-    }
 }

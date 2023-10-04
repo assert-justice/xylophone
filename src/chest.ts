@@ -1,7 +1,6 @@
 import { Graphics } from "cleo";
 import { Holdable } from "./holdable";
 import { Sprite } from "./cleo-utils/sprite";
-import { Vec2 } from "./cleo-utils/la";
 
 export class Chest extends Holdable{
     constructor(){
