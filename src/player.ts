@@ -5,6 +5,7 @@ import { InputMap } from "./input_map";
 import { HashGrid2D } from './hash_grid';
 import { tileWidth, roomWidth, roomHeight } from './constants';
 import { GameState } from './game_state';
+import { Holdable } from './holdable';
 const { Texture } = Graphics;
 
 export class Player {
@@ -12,6 +13,7 @@ export class Player {
     input = new InputMap();
     speed = 300;
     spr: Sprite;
+    held?: Holdable;
     constructor(){
         const tex = Texture.fromFile('./sprites/SpriteSheet.png');
         this.spr = new Sprite(tex);
