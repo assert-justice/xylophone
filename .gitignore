@@ -2,3 +2,4 @@
 /dist/cleo.exe
 /node_modules
 *.js
+.vscode

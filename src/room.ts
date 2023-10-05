@@ -1,12 +1,12 @@
 import { Graphics, System } from 'cleo';
 import { Sprite } from "./cleo-utils/sprite";
-import { HashGrid2D } from './cleo-utils/hash_grid';
 import { roomHeight, roomWidth, tileWidth } from './constants';
-import { Vec2 } from './cleo-utils/la';
 import { GameState } from './game_state';
+import { lerp } from './cleo-utils/ease';
 
 export class Room{
-    bg: Graphics.Texture;
+    bg: Sprite;
+    drawAnimBg = false;
     chestSpr: Sprite;
     floorTile: Sprite;
     wallTile: Sprite;
@@ -29,7 +29,12 @@ export class Room{
         dcr:[2,10],
     }
     constructor(){
-        this.bg = Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth);
+        this.bg = new Sprite(
+            Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth));
+        this.bg.setProps({
+            ox:roomWidth * tileWidth/2,
+            oy:roomHeight * tileWidth/2,
+        });
         this.floorTile = new Sprite(
             Graphics.Texture.fromFile('./sprites/TilesetInteriorFloor.png'));
         this.floorTile.setProps({
@@ -63,14 +68,18 @@ export class Room{
         this.drawStatic();
     }
     draw(){
-        this.bg.draw(0,0);
         if(GameState.animator.isPlaying()){
             this.chestSpr.draw(roomWidth*tileWidth/2,roomHeight*tileWidth/2);
+            if(this.drawAnimBg){
+                this.bg.draw(roomWidth * tileWidth/2,roomHeight * tileWidth/2);
+            }
+        }
+        else{
+            this.bg.draw(roomWidth * tileWidth/2,roomHeight * tileWidth/2);
         }
     }
     private drawStatic(){
-        this.bg.setTarget();
-        // GameState.grid.data.clear();
+        this.bg.tex.setTarget();
         for(let x = 0; x < roomWidth; x++){
             for(let y = 0; y < roomHeight; y++){
                 let coord:number[] = [0,0];
@@ -90,27 +99,41 @@ export class Room{
                 }
                 else if(y === 0) coord = this.wallCoords.u;
                 else if(y === roomHeight-1) coord = this.wallCoords.d;
-                // GameState.grid.set(x, y, 1);
                 this.wallTile.props.sx = coord[0] * tileWidth;
                 this.wallTile.props.sy = coord[1] * tileWidth;
                 this.wallTile.draw(x*tileWidth, y*tileWidth);
             }
         }
-        this.bg.resetTarget();
+        this.bg.tex.resetTarget();
     }
     enter(){
-        function lerp(a: number, b: number, t: number){
-            return (b-a)*t + a;
-        }
-        const group = GameState.animator.addGroup();
+        this.chestSpr.props.visible=true;
+        let group = GameState.animator.addGroup();
         group.addAnim(1, 
             (p: number)=>{
                 this.chestSpr.setProps({
-                    width: lerp(16, roomWidth*tileWidth, p),
-                    height: lerp(16, roomWidth*tileWidth, p),
+                    width: lerp(16, roomWidth*tileWidth*4, p),
+                    height: lerp(16, roomWidth*tileWidth*4, p),
                 });
             }, 
             ()=>{
+                this.drawAnimBg = true;
+                this.bg.setProps({
+                    width: 16,
+                    height: 16,
+                });
+            });
+        group = GameState.animator.addGroup();
+        group.addAnim(1, 
+            (p: number)=>{
+                this.bg.setProps({
+                    width: lerp(16, roomWidth*tileWidth, p),
+                    height: lerp(16, roomHeight*tileWidth, p),
+                });
+                if(p>0.5) this.chestSpr.props.visible=false;
+            }, 
+            ()=>{
+                this.drawAnimBg = false;
                 this.chestSpr.setProps({
                     width: 16,
                     height: 16,
