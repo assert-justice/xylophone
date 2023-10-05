@@ -11,6 +11,6 @@ export class Sprite {
         this.tex.draw(x, y, this.props);
     }
     setProps(props: Graphics.TextureParams){
-        this.props = props;
+        Object.assign(this.props, props);
     }
 }

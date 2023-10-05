@@ -7,8 +7,9 @@ import { GameState } from './game_state';
 
 export class Room{
     bg: Graphics.Texture;
-    floorTile;
-    wallTile;
+    chestSpr: Sprite;
+    floorTile: Sprite;
+    wallTile: Sprite;
     wallCoords = {
         ulc:[0,6],
         urc:[4,6],
@@ -39,6 +40,18 @@ export class Room{
             sw:tileWidth,
             sh:tileWidth,
         });
+        this.chestSpr = new Sprite(
+            Graphics.Texture.fromFile('./sprites/BigTreasureChest.png'));
+        this.chestSpr.setProps({
+            width: 16,
+            height: 16,
+            sw: 16,
+            sh: 16,
+            sx: 16,
+            ox: 8,
+            oy: 8,
+            // angle: 30,
+        });
         this.wallTile = new Sprite(
             Graphics.Texture.fromFile('./sprites/TilesetWallSimple.png'));
         this.wallTile.setProps({
@@ -51,6 +64,9 @@ export class Room{
     }
     draw(){
         this.bg.draw(0,0);
+        if(GameState.animator.isPlaying()){
+            this.chestSpr.draw(roomWidth*tileWidth/2,roomHeight*tileWidth/2);
+        }
     }
     private drawStatic(){
         this.bg.setTarget();
@@ -81,5 +97,25 @@ export class Room{
             }
         }
         this.bg.resetTarget();
+    }
+    enter(){
+        function lerp(a: number, b: number, t: number){
+            return (b-a)*t + a;
+        }
+        const group = GameState.animator.addGroup();
+        group.addAnim(1, 
+            (p: number)=>{
+                this.chestSpr.setProps({
+                    width: lerp(16, roomWidth*tileWidth, p),
+                    height: lerp(16, roomWidth*tileWidth, p),
+                });
+            }, 
+            ()=>{
+                this.chestSpr.setProps({
+                    width: 16,
+                    height: 16,
+                });
+            });
+        GameState.animator.play();
     }
 }

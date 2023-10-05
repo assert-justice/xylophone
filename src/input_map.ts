@@ -11,6 +11,7 @@ const key = {
     s:83,
     d:68,
     space:32,
+    e: 69,
 }
 
 export class InputMap{
@@ -19,6 +20,10 @@ export class InputMap{
     private _grab: [boolean,boolean] = [false,false];
     get grabDown(){
         return this._grab[0] && !this._grab[1];
+    }
+    private _use: [boolean,boolean] = [false,false];
+    get useDown(){
+        return this._use[0] && !this._use[1];
     }
     poll(){
         this._move.x = 0;
@@ -30,5 +35,7 @@ export class InputMap{
         if(this._move.length() > 1) this._move.normalize();
         this._grab[1] = this._grab[0];
         this._grab[0] = Input.keyIsDown(key.space);
+        this._use[1] = this._use[0];
+        this._use[0] = Input.keyIsDown(key.e);
     }
 }

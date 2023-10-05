@@ -6,6 +6,7 @@ import { roomHeight, roomWidth, tileWidth } from './constants';
 import { GameState } from './game_state';
 import { Chest } from './chest';
 import { RoomGrid } from './room_grid';
+import { Animator } from './cleo-utils/animator';
 
 Window.setStats('xylophone', roomWidth*tileWidth*2, roomHeight*tileWidth*2);
 
@@ -15,6 +16,7 @@ Game.init = ()=>{
     GameState.fb.setProps({width: Window.width,
         height: Window.height,
     });
+    GameState.animator = new Animator();
     const chest = new Chest();
     GameState.holdables = [chest];
     GameState.grid = new RoomGrid();
@@ -31,6 +33,7 @@ Game.update = (dt:number)=>{
     for (const h of GameState.holdables) {
         h.update(dt);
     }
+    GameState.animator.update(dt);
 }
 
 Game.draw = ()=>{

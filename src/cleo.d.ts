@@ -22,7 +22,7 @@ declare module "cleo" {
             sh?: number;
             ox?: number;
             oy?: number;
-            
+            angle?: number;
         }
         class Texture{
             width:number;

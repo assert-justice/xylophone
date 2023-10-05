@@ -2,9 +2,9 @@ import { Graphics } from "cleo";
 import { Player } from "./player";
 import { Room } from "./room";
 import { Sprite } from "./cleo-utils/sprite";
-import { tileWidth } from "./constants";
 import { Holdable } from "./holdable";
 import { RoomGrid } from "./room_grid";
+import { Animator } from "./cleo-utils/animator";
 
 export class GameState{
     static player: Player;
@@ -13,4 +13,5 @@ export class GameState{
     static selectionTex: Graphics.Texture;
     static grid: RoomGrid;
     static holdables: Holdable[];
+    static animator: Animator;
 }
