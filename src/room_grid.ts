@@ -15,7 +15,7 @@ export class RoomGrid{
             }
         }
     }
-    isSolid(cx: number, cy: number): boolean{
+    isCellSolid(cx: number, cy: number): boolean{
         if(!this.onGrid(cx, cy)) return true;
         return this.hashGrid.get(cx, cy) === 1;
     }
@@ -27,10 +27,10 @@ export class RoomGrid{
     }
     collide(position: Vec2, vel: Vec2){
         const check = (cx: number, cy: number) =>{
-            if(this.isSolid(cx, cy)) return true;
-            if(this.isSolid(cx+1, cy)) return true;
-            if(this.isSolid(cx, cy+1)) return true;
-            if(this.isSolid(cx+1, cy+1)) return true;
+            if(this.isCellSolid(cx, cy)) return true;
+            if(this.isCellSolid(cx+1, cy)) return true;
+            if(this.isCellSolid(cx, cy+1)) return true;
+            if(this.isCellSolid(cx+1, cy+1)) return true;
             return false;
         }
         // try moving in x direction and see if there is a problem

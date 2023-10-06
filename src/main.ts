@@ -9,6 +9,7 @@ import { RoomGrid } from './room_grid';
 import { Animator } from './cleo-utils/animator';
 import { Editor } from './editor';
 import { InputMap } from './input_map';
+import { TextureStore } from './cleo-utils/texture_store';
 
 Window.setStats('xylophone', roomWidth*tileWidth*2, roomHeight*tileWidth*2);
 
@@ -18,6 +19,17 @@ Game.init = ()=>{
     GameState.fb.setProps({width: Window.width,
         height: Window.height,
     });
+    GameState.texStore = new TextureStore();
+    GameState.texStore.setGroup([
+        ['selection', './sprites/selection.png'],
+        ['goldChest', './sprites/BigTreasureChest.png'],
+        ['silverChest', './sprites/LittleTreasureChest.png'],
+        ['goldKey', './sprites/GoldKey.png'],
+        ['silverKey', './sprites/SilverKey.png'],
+        ['playerSheet', './sprites/SpriteSheet.png'],
+        ['floorTiles','./sprites/TilesetInteriorFloor.png'],
+        ['wallTiles','./sprites/TilesetInterior.png'],
+    ]);
     GameState.animator = new Animator();
     const chest = new Chest();
     GameState.holdables = [chest];
@@ -27,7 +39,6 @@ Game.init = ()=>{
     GameState.player.held = chest;
     GameState.player.position.x = 100; GameState.player.position.y = 100;
     GameState.inputMap = new InputMap();
-    // GameState.selectionTex = Graphics.Texture.fromFile('./sprites/selection.png');
     GameState.editor = new Editor();
 }
 

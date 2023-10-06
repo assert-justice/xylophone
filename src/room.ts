@@ -36,8 +36,7 @@ export class Room{
             ox:roomWidth * tileWidth/2,
             oy:roomHeight * tileWidth/2,
         });
-        this.floorTile = new Sprite(
-            Graphics.Texture.fromFile('./sprites/TilesetInteriorFloor.png'));
+        this.floorTile = new Sprite(GameState.texStore.get('floorTiles'));
         this.floorTile.setProps({
             width:tileWidth,
             height:tileWidth,
@@ -46,8 +45,7 @@ export class Room{
             sw:tileWidth,
             sh:tileWidth,
         });
-        this.chestSpr = new Sprite(
-            Graphics.Texture.fromFile('./sprites/BigTreasureChest.png'));
+        this.chestSpr = new Sprite(GameState.texStore.get('goldChest'));
         this.chestSpr.setProps({
             width: 16,
             height: 16,
@@ -58,8 +56,7 @@ export class Room{
             oy: 8,
             // angle: 30,
         });
-        this.wallTile = new Sprite(
-            Graphics.Texture.fromFile('./sprites/TilesetInterior.png'));
+        this.wallTile = new Sprite(GameState.texStore.get('wallTiles'));
         this.wallTile.setProps({
             width:tileWidth,
             height:tileWidth,
@@ -85,7 +82,7 @@ export class Room{
             for(let y = 0; y < roomHeight; y++){
                 let coord:number[] = [0,0];
                 if((x > 0 && x < roomWidth - 1) && (y > 0 && y < roomHeight - 1)){
-                    if(GameState.grid.isSolid(x, y)){
+                    if(GameState.grid.isCellSolid(x, y)){
                         coord = this.wallCoords.block;
                     }
                     else{

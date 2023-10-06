@@ -9,9 +9,9 @@ export class Editor{
     iconIdx = 0;
     active: boolean = true;
     constructor(){
-        this.selectionTex = Graphics.Texture.fromFile('./sprites/selection.png');
-        const goldChestTex = Graphics.Texture.fromFile('./sprites/BigTreasureChest.png');
-        const silverChestTex = Graphics.Texture.fromFile('./sprites/LittleTreasureChest.png');
+        this.selectionTex = GameState.texStore.get('selection');
+        const goldChestTex = GameState.texStore.get('goldChest');
+        const silverChestTex = GameState.texStore.get('silverChest');
         this.icons = [
             new Sprite(GameState.room.wallTile.tex, {
                 width: 16,
@@ -39,11 +39,11 @@ export class Editor{
                 sw: 16,
                 sx: 16,
             }),
-            new Sprite(Graphics.Texture.fromFile('./sprites/SilverKey.png'), {
+            new Sprite(GameState.texStore.get('goldKey'), {
                 ox: -2,
                 oy: -4,
             }),
-            new Sprite(Graphics.Texture.fromFile('./sprites/GoldKey.png'), {
+            new Sprite(GameState.texStore.get('silverChest'), {
                 ox: -2,
                 oy: -4,
             }),

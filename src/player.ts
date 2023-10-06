@@ -1,21 +1,15 @@
-import { System, Graphics } from 'cleo';
 import { Sprite } from "./cleo-utils/sprite";
 import { Vec2 } from "./cleo-utils/la";
-// import { InputMap } from "./input_map";
-// import { tileWidth, roomWidth, roomHeight } from './constants';
 import { GameState } from './game_state';
 import { Holdable } from './holdable';
-const { Texture } = Graphics;
 
 export class Player {
     position = new Vec2();
-    // input = new InputMap();
     speed = 300;
     spr: Sprite;
     held?: Holdable;
     constructor(){
-        const tex = Texture.fromFile('./sprites/SpriteSheet.png');
-        this.spr = new Sprite(tex);
+        this.spr = new Sprite(GameState.texStore.get('playerSheet'));
         this.spr.setProps({
             width: 16,
             height: 16,
