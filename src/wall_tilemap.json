@@ -1,0 +1,28 @@
+{
+    "src": "sprites/TileSetInterior",
+    "tiles":{
+        "1,0": "weew",
+        "2,0": "weww",
+        "3,0": "aewa",
+        "4,0": "weaa",
+        "5,0": "wewa",
+        "6,0": "eeww",
+        "0,1": "weew",
+        "1,1": "awwa",
+        "2,1": "awaa",
+        "6,1": "wwaa",
+        "7,1": "eeww",
+        "0,2": "weew",
+        "1,2": "waww",
+        "2,2": "aawa",
+        "5,2": "waaa",
+        "6,2": "waww",
+        "7,2": "ewwe",
+        "1,3": "awew",
+        "6,3": "ewaw",
+        "1,4": "awew",
+        "6,4": "ewaa",
+        "1,5": "aaew",
+        "2,5": "wewa"
+    }
+}

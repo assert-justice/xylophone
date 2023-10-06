@@ -1,6 +1,8 @@
 import { Input } from 'cleo'
 import { Vec2 } from './cleo-utils/la';
 import { clamp } from './cleo-utils/ease';
+import { tileWidth } from './constants';
+import { GameState } from './game_state';
 
 const key = {
     right: 262,
@@ -26,6 +28,15 @@ export class InputMap{
     get useDown(){
         return this._use[0] && !this._use[1];
     }
+    private _m1Down: [boolean,boolean] = [false,false];
+    get m1Down(){
+        return this._m1Down[0] && !this._m1Down[1];
+    }
+    mouseCell(){
+        return GameState.grid.toCoord(Input.mouseX/2, Input.mouseY/2);
+    }
+    // get mcx(){return Math.trunc(Input.mouseX/tileWidth);};
+    // get mcy(){return Math.trunc(Input.mouseY/tileWidth);};
     deadzone: number = 0;
     poll(){
         this._move.x = 0;
@@ -41,9 +52,12 @@ export class InputMap{
         if(len < 0) len = 0;
         else if(len > 1) len = 1;
         this._move.normalize().mul(len);
-        this._grab[1] = this._grab[0];
-        this._grab[0] = Input.keyIsDown(key.space);
-        this._use[1] = this._use[0];
-        this._use[0] = Input.keyIsDown(key.e);
+        this.setButton(this._grab, Input.keyIsDown(key.space));
+        this.setButton(this._use, Input.keyIsDown(key.e));
+        this.setButton(this._m1Down, Input.mouseButtonIsDown(0));
+    }
+    private setButton(button: [boolean, boolean], val: boolean){
+        button[1] = button[0];
+        button[0] = val;
     }
 }

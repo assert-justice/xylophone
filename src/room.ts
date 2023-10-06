@@ -11,14 +11,31 @@ export class Room{
     floorTile: Sprite;
     wallTile: Sprite;
     wallCoords = {
-        ulc:[0,6],
-        urc:[4,6],
-        dlc:[0,10],
-        drc:[4,10],
-        l:[0,7],
-        r:[4,7],
-        u:[3,6],
-        d:[3,10],
+        // ulc:[0,6],
+        // urc:[4,6],
+        // dlc:[0,10],
+        // drc:[4,10],
+        // l:[0,7],
+        // r:[4,7],
+        // u:[3,6],
+        // d:[3,10],
+        // lcu:[0,8],
+        // lcd:[0,9],
+        // rcu:[4,8],
+        // rcd:[4,9],
+        // ucl:[1,6],
+        // ucr:[2,6],
+        // dcl:[1,10],
+        // dcr:[2,10],
+        ulc:[1,0],
+        urc:[6,0],
+        dlc:[0,2],
+        drc:[7,2],
+        l:[1,3],
+        r:[6,3],
+        u:[5,0],
+        d:[5,9],
+        block: [2,5],
         lcu:[0,8],
         lcd:[0,9],
         rcu:[4,8],
@@ -58,7 +75,7 @@ export class Room{
             // angle: 30,
         });
         this.wallTile = new Sprite(
-            Graphics.Texture.fromFile('./sprites/TilesetWallSimple.png'));
+            Graphics.Texture.fromFile('./sprites/TilesetInterior.png'));
         this.wallTile.setProps({
             width:tileWidth,
             height:tileWidth,
@@ -78,14 +95,19 @@ export class Room{
             this.bg.draw(roomWidth * tileWidth/2,roomHeight * tileWidth/2);
         }
     }
-    private drawStatic(){
+    drawStatic(){
         this.bg.tex.setTarget();
         for(let x = 0; x < roomWidth; x++){
             for(let y = 0; y < roomHeight; y++){
                 let coord:number[] = [0,0];
                 if((x > 0 && x < roomWidth - 1) && (y > 0 && y < roomHeight - 1)){
-                    this.floorTile.draw(x * tileWidth, y * tileWidth);
-                    continue;
+                    if(GameState.grid.isSolid(x, y)){
+                        coord = this.wallCoords.block;
+                    }
+                    else{
+                        this.floorTile.draw(x * tileWidth, y * tileWidth);
+                        continue;
+                    }
                 }
                 else if(x === 0){
                     if(y === 0) coord = this.wallCoords.ulc;

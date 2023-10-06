@@ -17,7 +17,7 @@ export class RoomGrid{
     }
     isSolid(cx: number, cy: number): boolean{
         if(!this.onGrid(cx, cy)) return true;
-        return this.hashGrid.get(cx, cy) > 0;
+        return this.hashGrid.get(cx, cy) === 1;
     }
     toCoord(x: number, y: number){
         return [
@@ -26,17 +26,26 @@ export class RoomGrid{
         ];
     }
     collide(position: Vec2, vel: Vec2){
-        const [cx, cy] = this.toCoord(position.x, position.y);
-        position.add(vel);
-        let minX = -Infinity; let maxX = Infinity;
-        let minY = -Infinity; let maxY = Infinity;
-        if(this.isSolid(cx-1, cy)) minX = cx*tileWidth;
-        if(this.isSolid(cx+1, cy)) maxX = cx*tileWidth;
-        if(this.isSolid(cx, cy-1)) minY = cy*tileWidth;
-        if(this.isSolid(cx, cy+1)) maxY = cy*tileWidth;
-        position.x = Math.min(maxX, Math.max(minX, position.x));
-        position.y = Math.min(maxY, Math.max(minY, position.y));
-        return position;
+        const check = (cx: number, cy: number) =>{
+            if(this.isSolid(cx, cy)) return true;
+            if(this.isSolid(cx+1, cy)) return true;
+            if(this.isSolid(cx, cy+1)) return true;
+            if(this.isSolid(cx+1, cy+1)) return true;
+            return false;
+        }
+        // try moving in x direction and see if there is a problem
+        let [cx, cy] = this.toCoord(position.x + vel.x, position.y);
+        // if there is clamp x velocity
+        if(check(cx, cy)){
+            // do this smarter
+            vel.x = 0;
+        }
+        [cx, cy] = this.toCoord(position.x, position.y + vel.y);
+        if(check(cx, cy)){
+            // do this smarter
+            vel.y = 0;
+        }
+        return position.add(vel);
     }
     onGrid(cx: number, cy: number): boolean{
         if(cx < 0 || cx >= roomWidth) return false;

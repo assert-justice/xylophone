@@ -41,8 +41,11 @@ export class Player {
                 }
             }
         }
-        if(this.input.useDown){
-            GameState.room.enter();
+        if(this.input.m1Down){
+            // GameState.room.enter();
+            const [mcx, mcy] = this.input.mouseCell();
+            GameState.grid.hashGrid.set(mcx, mcy, 1);
+            GameState.room.drawStatic();
         }
         const velocity = this.input.move.mul(dt * this.speed);
         this.position = GameState.grid.collide(this.position, velocity);

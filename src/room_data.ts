@@ -5,5 +5,6 @@ export interface RoomDate{
     childId: number;
     childCellX: number;
     childCellY: number;
-    parents: [number,string][]; // id, coord
+    parentPads: [number,string][]; // id, coord
+    walls: string[]; // coords
 }
