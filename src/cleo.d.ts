@@ -43,22 +43,23 @@ declare module "cleo" {
 
     }
     export class Input{
-        static keyIsDown(keyCode: number): boolean
-        static mouseButtonIsDown(mouseButtonCode: number): boolean
-        static get mouseX(): number
-        static get mouseY(): number
-        static joyButtonIsDown(joyIdx: number, buttonCode: number): boolean
-        static joyGetAxis(joyIdx: number, axisCode: number): boolean
+        static keyIsDown(keyCode: number): boolean;
+        static mouseButtonIsDown(mouseButtonCode: number): boolean;
+        static get mouseX(): number;
+        static get mouseY(): number;
+        static joyButtonIsDown(joyIdx: number, buttonCode: number): boolean;
+        static joyGetAxis(joyIdx: number, axisCode: number): boolean;
+        static gamepadExists(joyIdx: number): boolean;
     }
     export namespace Audio{
         class Sound{
-            static fromFile(path: string)
-            play()
-            pause()
-            stop()
-            get isPlaying(): boolean
-            volume: number
-            isLooping: boolean
+            static fromFile(path: string);
+            play();
+            pause();
+            stop();
+            get isPlaying(): boolean;
+            volume: number;
+            isLooping: boolean;
         }
     }
 }
