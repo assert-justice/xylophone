@@ -3,9 +3,9 @@ import { Graphics } from 'cleo';
 export class Sprite {
     tex: Graphics.Texture;
     props: Graphics.TextureParams;
-    constructor(tex: Graphics.Texture){
+    constructor(tex: Graphics.Texture, props?:Graphics.TextureParams){
         this.tex = tex;
-        this.props = {};
+        this.props = props ?? {};
     }
     draw(x: number, y: number){
         this.tex.draw(x, y, this.props);

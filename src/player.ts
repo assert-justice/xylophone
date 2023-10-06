@@ -1,7 +1,7 @@
 import { System, Graphics } from 'cleo';
 import { Sprite } from "./cleo-utils/sprite";
 import { Vec2 } from "./cleo-utils/la";
-import { InputMap } from "./input_map";
+// import { InputMap } from "./input_map";
 // import { tileWidth, roomWidth, roomHeight } from './constants';
 import { GameState } from './game_state';
 import { Holdable } from './holdable';
@@ -9,7 +9,7 @@ const { Texture } = Graphics;
 
 export class Player {
     position = new Vec2();
-    input = new InputMap();
+    // input = new InputMap();
     speed = 300;
     spr: Sprite;
     held?: Holdable;
@@ -27,8 +27,7 @@ export class Player {
         this.spr.draw(this.position.x, this.position.y);
     }
     update(dt: number){
-        this.input.poll();
-        if(this.input.grabDown){
+        if(GameState.inputMap.grabDown){
             if(this.held) this.held = undefined;
             else{
                 let minDis = 16;
@@ -41,13 +40,7 @@ export class Player {
                 }
             }
         }
-        if(this.input.m1Down){
-            // GameState.room.enter();
-            const [mcx, mcy] = this.input.mouseCell();
-            GameState.grid.hashGrid.set(mcx, mcy, 1);
-            GameState.room.drawStatic();
-        }
-        const velocity = this.input.move.mul(dt * this.speed);
+        const velocity = GameState.inputMap.move.mul(dt * this.speed);
         this.position = GameState.grid.collide(this.position, velocity);
     }
 }

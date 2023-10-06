@@ -11,22 +11,6 @@ export class Room{
     floorTile: Sprite;
     wallTile: Sprite;
     wallCoords = {
-        // ulc:[0,6],
-        // urc:[4,6],
-        // dlc:[0,10],
-        // drc:[4,10],
-        // l:[0,7],
-        // r:[4,7],
-        // u:[3,6],
-        // d:[3,10],
-        // lcu:[0,8],
-        // lcd:[0,9],
-        // rcu:[4,8],
-        // rcd:[4,9],
-        // ucl:[1,6],
-        // ucr:[2,6],
-        // dcl:[1,10],
-        // dcr:[2,10],
         ulc:[1,0],
         urc:[6,0],
         dlc:[0,2],

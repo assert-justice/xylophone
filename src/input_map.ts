@@ -32,11 +32,23 @@ export class InputMap{
     get m1Down(){
         return this._m1Down[0] && !this._m1Down[1];
     }
+    get m1Pressed(){
+        return this._m1Down[0];
+    }
+    private _m2Down: [boolean,boolean] = [false,false];
+    get m2Down(){
+        return this._m2Down[0] && !this._m2Down[1];
+    }
+    get m2Pressed(){
+        return this._m2Down[0];
+    }
+    private _edit: [boolean,boolean] = [false,false];
+    get editDown(){
+        return this._edit[0] && !this._edit[1];
+    }
     mouseCell(){
         return GameState.grid.toCoord(Input.mouseX/2, Input.mouseY/2);
     }
-    // get mcx(){return Math.trunc(Input.mouseX/tileWidth);};
-    // get mcy(){return Math.trunc(Input.mouseY/tileWidth);};
     deadzone: number = 0;
     poll(){
         this._move.x = 0;
@@ -55,6 +67,8 @@ export class InputMap{
         this.setButton(this._grab, Input.keyIsDown(key.space));
         this.setButton(this._use, Input.keyIsDown(key.e));
         this.setButton(this._m1Down, Input.mouseButtonIsDown(0));
+        this.setButton(this._m2Down, Input.mouseButtonIsDown(1));
+        this.setButton(this._edit, Input.keyIsDown(258));
     }
     private setButton(button: [boolean, boolean], val: boolean){
         button[1] = button[0];
