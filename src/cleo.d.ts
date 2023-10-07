@@ -4,7 +4,7 @@ declare module "cleo" {
         function readFile(path:string):string;
         function writeFile(path:string,text:string):void;
     }
-    export class Game{
+    export class Engine{
         static init: ()=>void;
         static update: (dt:number)=>void;
         static draw: ()=>void;

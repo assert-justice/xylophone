@@ -1,4 +1,4 @@
-import { System, Game, Window, Graphics, Input } from 'cleo';
+import { System, Engine, Window, Graphics, Input } from 'cleo';
 import { Player } from './player';
 import { Room } from './room';
 import { Sprite } from './cleo-utils/sprite';
@@ -24,7 +24,7 @@ const rd: RoomData = {
 // System.println(str);
 // System.println(Object.keys(JSON.parse(`{"type": "goldChest", "childId": 1}`)));
 
-Game.init = ()=>{
+Engine.init = ()=>{
     const fbTex = Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth);
     GameState.fb = new Sprite(fbTex);
     GameState.fb.setProps({width: Window.width,
@@ -54,8 +54,8 @@ Game.init = ()=>{
     GameState.room.enter(rd);
 }
 
-Game.update = (dt:number)=>{
-    if(Input.keyIsDown(256)) Game.quit();
+Engine.update = (dt:number)=>{
+    if(Input.keyIsDown(256)) Engine.quit();
     GameState.inputMap.poll();
     GameState.editor.update(dt);
     GameState.player.update(dt);
@@ -65,7 +65,7 @@ Game.update = (dt:number)=>{
     GameState.animator.update(dt);
 }
 
-Game.draw = ()=>{
+Engine.draw = ()=>{
     GameState.fb.tex.setTarget();
     GameState.room.draw();
     GameState.player.draw();
