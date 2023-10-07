@@ -3,6 +3,7 @@ import { Sprite } from "./cleo-utils/sprite";
 import { roomHeight, roomWidth, tileWidth } from './constants';
 import { GameState } from './game_state';
 import { lerp } from './cleo-utils/ease';
+import { RoomData, RoomFrame } from './room_data';
 
 export class Room{
     bg: Sprite;
@@ -20,16 +21,11 @@ export class Room{
         u:[5,0],
         d:[5,9],
         block: [2,5],
-        lcu:[0,8],
-        lcd:[0,9],
-        rcu:[4,8],
-        rcd:[4,9],
-        ucl:[1,6],
-        ucr:[2,6],
-        dcl:[1,10],
-        dcr:[2,10],
     }
+    stack: RoomFrame[];
+    data?: RoomData;
     constructor(){
+        this.stack = [];
         this.bg = new Sprite(
             Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth));
         this.bg.setProps({
@@ -54,7 +50,6 @@ export class Room{
             sx: 16,
             ox: 8,
             oy: 8,
-            // angle: 30,
         });
         this.wallTile = new Sprite(GameState.texStore.get('wallTiles'));
         this.wallTile.setProps({
@@ -63,7 +58,32 @@ export class Room{
             sw:tileWidth,
             sh:tileWidth,
         });
-        this.drawStatic();
+        this.drawBg();
+    }
+    enter(data: RoomData){
+        this.data = data;
+        const frame: RoomFrame = {
+            id: data.id,
+            holdables: [],
+        }
+        this.stack.push(frame);
+        this.redraw();
+    }
+    redraw(){
+        if(!this.data) throw 'woops';
+        this.drawBg();
+        this.bg.tex.setTarget();
+        for(const [coord, type] of this.data.tiles){
+            const [cx, cy] = GameState.grid.hashGrid.toCoord(coord);
+            if(type === 'wall'){
+                this.wallTile.setProps({
+                    sx: this.wallCoords.block[0] * tileWidth,
+                    sy: this.wallCoords.block[1] * tileWidth,
+                });
+                this.wallTile.draw(cx*tileWidth, cy*tileWidth);
+            }
+        }
+        this.bg.tex.resetTarget();
     }
     draw(){
         if(GameState.animator.isPlaying()){
@@ -76,19 +96,14 @@ export class Room{
             this.bg.draw(roomWidth * tileWidth/2,roomHeight * tileWidth/2);
         }
     }
-    drawStatic(){
+    drawBg(){
         this.bg.tex.setTarget();
         for(let x = 0; x < roomWidth; x++){
             for(let y = 0; y < roomHeight; y++){
                 let coord:number[] = [0,0];
                 if((x > 0 && x < roomWidth - 1) && (y > 0 && y < roomHeight - 1)){
-                    if(GameState.grid.isCellSolid(x, y)){
-                        coord = this.wallCoords.block;
-                    }
-                    else{
-                        this.floorTile.draw(x * tileWidth, y * tileWidth);
-                        continue;
-                    }
+                    this.floorTile.draw(x * tileWidth, y * tileWidth);
+                    continue;
                 }
                 else if(x === 0){
                     if(y === 0) coord = this.wallCoords.ulc;
@@ -109,7 +124,7 @@ export class Room{
         }
         this.bg.tex.resetTarget();
     }
-    enter(){
+    enterAnim(){
         this.chestSpr.props.visible=true;
         let group = GameState.animator.addGroup();
         group.addAnim(1, 

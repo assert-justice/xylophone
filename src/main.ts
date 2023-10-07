@@ -10,8 +10,19 @@ import { Animator } from './cleo-utils/animator';
 import { Editor } from './editor';
 import { InputMap } from './input_map';
 import { TextureStore } from './cleo-utils/texture_store';
+import { RoomData } from './room_data';
 
 Window.setStats('xylophone', roomWidth*tileWidth*2, roomHeight*tileWidth*2);
+
+const rd: RoomData = {
+    id: 0,
+    tiles: [['1,1','wall']],
+}
+
+// rd.tiles.push(['1,1',`{"type": "goldChest", "childId": 1}`]);
+// const str = JSON.stringify(rd);
+// System.println(str);
+// System.println(Object.keys(JSON.parse(`{"type": "goldChest", "childId": 1}`)));
 
 Game.init = ()=>{
     const fbTex = Graphics.Texture.new(roomWidth * tileWidth, roomHeight * tileWidth);
@@ -31,15 +42,16 @@ Game.init = ()=>{
         ['wallTiles','./sprites/TilesetInterior.png'],
     ]);
     GameState.animator = new Animator();
-    const chest = new Chest();
-    GameState.holdables = [chest];
+    // const chest = new Chest();
+    GameState.holdables = [];
     GameState.grid = new RoomGrid();
     GameState.room = new Room();
     GameState.player = new Player();
-    GameState.player.held = chest;
+    // GameState.player.held = chest;
     GameState.player.position.x = 100; GameState.player.position.y = 100;
     GameState.inputMap = new InputMap();
     GameState.editor = new Editor();
+    GameState.room.enter(rd);
 }
 
 Game.update = (dt:number)=>{
