@@ -15,14 +15,20 @@ export class Editor{
     selectionTex: Graphics.Texture;
     icons: Icon[];
     iconIdx = 0;
-    active: boolean = true;
+    active: boolean = false;
     editButton: VButton;
     m1: VButton;
     m2: VButton;
+    next: VButton;
+    last: VButton;
+    save: VButton;
     constructor(){
         this.editButton = GameState.inputMap.getButton('edit');
         this.m1 = GameState.inputMap.getButton('m1');
         this.m2 = GameState.inputMap.getButton('m2');
+        this.next = GameState.inputMap.getButton('next');
+        this.last = GameState.inputMap.getButton('last');
+        this.save = GameState.inputMap.getButton('save');
         this.selectionTex = GameState.texStore.get('selection');
         const goldChestTex = GameState.texStore.get('goldChest');
         const silverChestTex = GameState.texStore.get('silverChest');
@@ -45,6 +51,7 @@ export class Editor{
                     width: tileWidth,
                     sw: tileWidth,
                 }),
+                data: {},
             },
             {
                 name: 'goldChestOpen',
@@ -86,24 +93,29 @@ export class Editor{
         ];
     }
     update(dt: number){
-        if(this.editButton.isPressed()) {
-            this.active = !this.active;
-        }
-        if(!this.active) return;
-        if(Input.keyIsDown(49)) this.iconIdx = 0;
-        if(Input.keyIsDown(50)) this.iconIdx = 1;
-        if(Input.keyIsDown(51)) this.iconIdx = 2;
-        if(Input.keyIsDown(52)) this.iconIdx = 3;
-        if(Input.keyIsDown(53)) this.iconIdx = 4;
-        if(Input.keyIsDown(54)) this.iconIdx = 5;
-        if(Input.keyIsDown(55)) this.iconIdx = 6;
         const data = GameState.room.data;
         if(!data) throw 'damn';
+        if(this.editButton.isPressed()) {
+            this.active = !this.active;
+            if(this.active) GameState.holdables.length = 0;
+            if(!this.active) GameState.room.enter(data);
+        }
+        if(!this.active) return;
+        if(this.next.isPressed()) this.iconIdx++;
+        if(this.last.isPressed()) this.iconIdx--;
+        if(this.iconIdx < 0) this.iconIdx = this.icons.length-1;
+        if(this.iconIdx == this.icons.length) this.iconIdx = 0;
+        // if(Input.keyIsDown(49)) this.iconIdx = 0;
+        // if(Input.keyIsDown(50)) this.iconIdx = 1;
+        // if(Input.keyIsDown(51)) this.iconIdx = 2;
+        // if(Input.keyIsDown(52)) this.iconIdx = 3;
+        // if(Input.keyIsDown(53)) this.iconIdx = 4;
+        // if(Input.keyIsDown(54)) this.iconIdx = 5;
+        // if(Input.keyIsDown(55)) this.iconIdx = 6;
 
         const [mcx, mcy] = GameState.inputMap.mouseCell();
         const key = GameState.grid.hashGrid.toKey(mcx, mcy);
         if(this.m1.isDown()){
-            // GameState.room.tiles.set(key, 'wall');
             const entry = data.tiles.find(val=>val[0]===key);
             const icon = this.icons[this.iconIdx];
             if(entry === undefined){
@@ -125,6 +137,9 @@ export class Editor{
             if(icon.solid) GameState.grid.hashGrid.set(mcx, mcy, 0);
             data.tiles.splice(idx, 1);
             GameState.room.redraw();
+        }
+        if(this.save.isPressed()){
+            System.writeFile('./rooms.json', JSON.stringify(data));
         }
     }
     draw(){

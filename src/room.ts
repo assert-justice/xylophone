@@ -4,6 +4,9 @@ import { roomHeight, roomWidth, tileWidth } from './constants';
 import { GameState } from './game_state';
 import { lerp } from './cleo-utils/ease';
 import { RoomData, RoomFrame } from './room_data';
+import { Holdable } from './holdable';
+import { GoldChest, SilverChest } from './chest';
+import { GoldKey, SilverKey } from './key';
 
 export class Room{
     bg: Sprite;
@@ -47,9 +50,6 @@ export class Room{
             height: 16,
             sw: 16,
             sh: 16,
-            sx: 16,
-            ox: 8,
-            oy: 8,
         });
         this.wallTile = new Sprite(GameState.texStore.get('wallTiles'));
         this.wallTile.setProps({
@@ -62,6 +62,47 @@ export class Room{
     }
     enter(data: RoomData){
         this.data = data;
+        GameState.player.position.x = data.spawnCellX*tileWidth;
+        GameState.player.position.y = data.spawnCellY*tileWidth;
+        GameState.holdables.length = 0;
+        for (const [key,name] of data.tiles) {
+            const icon = GameState.editor.icons.find(ic => name.startsWith(ic.name));
+            if(icon === undefined) throw 'mismatch';
+            const [cx, cy] = GameState.grid.hashGrid.toCoord(key);
+            if(icon.solid){
+                GameState.grid.hashGrid.set(cx, cy, 1);
+                continue;
+            }
+            let hold: Holdable;
+            if(name.startsWith('goldChestClosed')){
+                hold = new GoldChest();
+            }
+            else if(name.startsWith('goldChestOpen')){
+                const temp = new GoldChest();
+                temp.open();
+                hold = temp;
+            }
+            else if(name.startsWith('silverChestClosed')){
+                hold = new SilverChest();
+            }
+            else if(name.startsWith('silverChestOpen')){
+                const temp = new SilverChest();
+                temp.open();
+                hold = temp;
+            }
+            else if(name.startsWith('goldKey')){
+                hold = new GoldKey();
+            }
+            else if(name.startsWith('silverKey')){
+                hold = new SilverKey();
+            }
+            else{
+                throw 'yep';
+            }
+            hold.position.x = cx * tileWidth;
+            hold.position.y = cy * tileWidth;
+            GameState.holdables.push(hold);
+        }
         const frame: RoomFrame = {
             id: data.id,
             holdables: [],

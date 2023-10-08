@@ -16,6 +16,11 @@ const key = {
     space:32,
     tab: 258,
     e: 69,
+    page_up: 266,
+    page_down: 267,
+    enter: 257,
+    0: 49,
+    1: 50,
 }
 
 export class VButton{
@@ -45,6 +50,9 @@ export class InputMap{
         this.addButton('edit').keys = [key.tab];
         this.addButton('m1').mouseButtons = [0];
         this.addButton('m2').mouseButtons = [1];
+        this.addButton('save').keys = [key.enter];
+        this.addButton('next').keys = [key[1]];
+        this.addButton('last').keys = [key[0]];
     }
     private buttons: Map<string,VButton>;
     addButton(name: string){

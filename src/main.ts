@@ -4,7 +4,7 @@ import { Room } from './room';
 import { Sprite } from './cleo-utils/sprite';
 import { roomHeight, roomWidth, tileWidth } from './constants';
 import { GameState } from './game_state';
-import { Chest } from './chest';
+// import { Chest } from './chest';
 import { RoomGrid } from './room_grid';
 import { Animator } from './cleo-utils/animator';
 import { Editor } from './editor';
@@ -17,6 +17,8 @@ Window.setStats('xylophone', roomWidth*tileWidth*2, roomHeight*tileWidth*2);
 const rd: RoomData = {
     id: 0,
     tiles: [['1,1','wall']],
+    spawnCellX: 2,
+    spawnCellY: 2,
 }
 
 // rd.tiles.push(['1,1',`{"type": "goldChest", "childId": 1}`]);
@@ -51,6 +53,8 @@ Engine.init = ()=>{
     // GameState.player.held = chest;
     GameState.player.position.x = 100; GameState.player.position.y = 100;
     GameState.editor = new Editor();
+    // const rd = System.readFile('./rooms.json');
+    // GameState.room.enter(JSON.parse(rd));
     GameState.room.enter(rd);
 }
 

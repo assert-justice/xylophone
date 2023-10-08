@@ -3,6 +3,7 @@ import { Vec2 } from "./cleo-utils/la";
 import { GameState } from './game_state';
 import { Holdable } from './holdable';
 import { VButton } from "./input_map";
+import { System } from "cleo";
 
 export class Player {
     position = new Vec2();

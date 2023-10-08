@@ -16,8 +16,8 @@ export interface RoomData{
     // childId: number;
     // this is an array of key/value pairs to make serialization easy
     tiles: [string,string][]; // coord, type
-    // childCellX: number;
-    // childCellY: number;
+    spawnCellX: number;
+    spawnCellY: number;
     // parentPads: [number,string][]; // id, coord
     // walls: string[]; // coords
 }
