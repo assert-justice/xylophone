@@ -2,11 +2,13 @@ import { Graphics, System, Input } from "cleo";
 import { Sprite } from "./cleo-utils/sprite";
 import { GameState } from "./game_state";
 import { tileWidth } from "./constants";
+import { VButton } from "./input_map";
 
 interface Icon{
     name: string;
     spr: Sprite;
     data?: object;
+    solid?: boolean;
 }
 
 export class Editor{
@@ -14,7 +16,13 @@ export class Editor{
     icons: Icon[];
     iconIdx = 0;
     active: boolean = true;
+    editButton: VButton;
+    m1: VButton;
+    m2: VButton;
     constructor(){
+        this.editButton = GameState.inputMap.getButton('edit');
+        this.m1 = GameState.inputMap.getButton('m1');
+        this.m2 = GameState.inputMap.getButton('m2');
         this.selectionTex = GameState.texStore.get('selection');
         const goldChestTex = GameState.texStore.get('goldChest');
         const silverChestTex = GameState.texStore.get('silverChest');
@@ -29,6 +37,7 @@ export class Editor{
                     sx: 2 * tileWidth,
                     sy: 5 * tileWidth,
                 }),
+                solid: true,
             },
             {
                 name: 'goldChestClosed',
@@ -77,7 +86,7 @@ export class Editor{
         ];
     }
     update(dt: number){
-        if(GameState.inputMap.editDown) {
+        if(this.editButton.isPressed()) {
             this.active = !this.active;
         }
         if(!this.active) return;
@@ -93,33 +102,34 @@ export class Editor{
 
         const [mcx, mcy] = GameState.inputMap.mouseCell();
         const key = GameState.grid.hashGrid.toKey(mcx, mcy);
-        if(GameState.inputMap.m1Pressed){
+        if(this.m1.isDown()){
             // GameState.room.tiles.set(key, 'wall');
             const entry = data.tiles.find(val=>val[0]===key);
-            const name = this.icons[this.iconIdx].name;
+            const icon = this.icons[this.iconIdx];
             if(entry === undefined){
-                data.tiles.push([key, name]);
+                data.tiles.push([key, icon.name]);
             }
             else{
-                if(entry[1] === name) return;
-                entry[1] = name;
+                if(entry[1] === icon.name) return;
+                entry[1] = icon.name;
             }
+            if(icon.solid) GameState.grid.hashGrid.set(mcx, mcy, 1);
             GameState.room.redraw();
         }
-        if(GameState.inputMap.m2Pressed){
+        if(this.m2.isDown()){
             const idx = data.tiles.findIndex(val=>val[0]===key);
+            const entry = data.tiles[idx];
             if(idx === -1) return;
+            const icon = this.icons.find(ic => entry[1].startsWith(ic.name));
+            if(!icon) throw 'no icon found, should be unreachable';
+            if(icon.solid) GameState.grid.hashGrid.set(mcx, mcy, 0);
             data.tiles.splice(idx, 1);
             GameState.room.redraw();
-            // if(GameState.grid.hashGrid.get(mcx, mcy) > 0){
-            //     GameState.grid.hashGrid.set(mcx, mcy, 0);
-            // }
         }
     }
     draw(){
         if(!this.active) return;
         const [mx, my] = GameState.inputMap.mouseCell()
-        if(!GameState.inputMap.m2Pressed)this.icons[this.iconIdx].spr.draw(mx*tileWidth,my*tileWidth);
         const data = GameState.room.data;
         if(!data) throw 'welp';
         for(let [key,name] of data.tiles){
@@ -127,6 +137,7 @@ export class Editor{
             const idx = this.icons.findIndex(a=>a.name === name);
             this.icons[idx].spr.draw(cx*tileWidth,cy*tileWidth);
         }
+        if(!this.m2.isDown())this.icons[this.iconIdx].spr.draw(mx*tileWidth,my*tileWidth);
         this.selectionTex.draw(mx*tileWidth,my*tileWidth);
     }
 }

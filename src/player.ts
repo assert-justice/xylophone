@@ -2,12 +2,14 @@ import { Sprite } from "./cleo-utils/sprite";
 import { Vec2 } from "./cleo-utils/la";
 import { GameState } from './game_state';
 import { Holdable } from './holdable';
+import { VButton } from "./input_map";
 
 export class Player {
     position = new Vec2();
     speed = 300;
     spr: Sprite;
     held?: Holdable;
+    grab: VButton;
     constructor(){
         this.spr = new Sprite(GameState.texStore.get('playerSheet'));
         this.spr.setProps({
@@ -16,12 +18,13 @@ export class Player {
             sw: 16,
             sh: 16,
         });
+        this.grab = GameState.inputMap.getButton('grab');
     }
     draw(){
         this.spr.draw(this.position.x, this.position.y);
     }
     update(dt: number){
-        if(GameState.inputMap.grabDown){
+        if(this.grab.isPressed()){
             if(this.held) this.held = undefined;
             else{
                 let minDis = 16;

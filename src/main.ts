@@ -41,6 +41,7 @@ Engine.init = ()=>{
         ['floorTiles','./sprites/TilesetInteriorFloor.png'],
         ['wallTiles','./sprites/TilesetInterior.png'],
     ]);
+    GameState.inputMap = new InputMap();
     GameState.animator = new Animator();
     // const chest = new Chest();
     GameState.holdables = [];
@@ -49,7 +50,6 @@ Engine.init = ()=>{
     GameState.player = new Player();
     // GameState.player.held = chest;
     GameState.player.position.x = 100; GameState.player.position.y = 100;
-    GameState.inputMap = new InputMap();
     GameState.editor = new Editor();
     GameState.room.enter(rd);
 }

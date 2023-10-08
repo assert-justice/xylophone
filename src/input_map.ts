@@ -14,38 +14,51 @@ const key = {
     s:83,
     d:68,
     space:32,
+    tab: 258,
     e: 69,
 }
 
+export class VButton{
+    keys: number[] = [];
+    mouseButtons: number[] = [];
+    state: boolean = false;
+    lastState: boolean = false;
+    poll(){
+        this.lastState = this.state;
+        this.state = false;
+        for (const key of this.keys) {
+            if(Input.keyIsDown(key)) this.state = true;
+        }
+        for (const button of this.mouseButtons) {
+            if(Input.mouseButtonIsDown(button)) this.state = true;
+        }
+    }
+    isDown(){return this.state;}
+    isPressed(){return this.state && !this.lastState;}
+    isReleased(){return !this.state && this.lastState;}
+}
+
 export class InputMap{
+    constructor(){
+        this.buttons = new Map();
+        this.addButton('grab').keys = [key.space];
+        this.addButton('edit').keys = [key.tab];
+        this.addButton('m1').mouseButtons = [0];
+        this.addButton('m2').mouseButtons = [1];
+    }
+    private buttons: Map<string,VButton>;
+    addButton(name: string){
+        const button = new VButton();
+        this.buttons.set(name, button);
+        return button;
+    }
+    getButton(name: string){
+        const button = this.buttons.get(name);
+        if(button === undefined) throw `Invalid button name '${name}'!`;
+        return button;
+    }
     private _move = new Vec2();
     get move(){return this._move;}
-    private _grab: [boolean,boolean] = [false,false];
-    get grabDown(){
-        return this._grab[0] && !this._grab[1];
-    }
-    private _use: [boolean,boolean] = [false,false];
-    get useDown(){
-        return this._use[0] && !this._use[1];
-    }
-    private _m1Down: [boolean,boolean] = [false,false];
-    get m1Down(){
-        return this._m1Down[0] && !this._m1Down[1];
-    }
-    get m1Pressed(){
-        return this._m1Down[0];
-    }
-    private _m2Down: [boolean,boolean] = [false,false];
-    get m2Down(){
-        return this._m2Down[0] && !this._m2Down[1];
-    }
-    get m2Pressed(){
-        return this._m2Down[0];
-    }
-    private _edit: [boolean,boolean] = [false,false];
-    get editDown(){
-        return this._edit[0] && !this._edit[1];
-    }
     mouseCell(){
         return GameState.grid.toCoord(Input.mouseX/2, Input.mouseY/2);
     }
@@ -64,14 +77,8 @@ export class InputMap{
         if(len < 0) len = 0;
         else if(len > 1) len = 1;
         this._move.normalize().mul(len);
-        this.setButton(this._grab, Input.keyIsDown(key.space));
-        this.setButton(this._use, Input.keyIsDown(key.e));
-        this.setButton(this._m1Down, Input.mouseButtonIsDown(0));
-        this.setButton(this._m2Down, Input.mouseButtonIsDown(1));
-        this.setButton(this._edit, Input.keyIsDown(258));
-    }
-    private setButton(button: [boolean, boolean], val: boolean){
-        button[1] = button[0];
-        button[0] = val;
+        for (const button of this.buttons.values()) {
+            button.poll();
+        }
     }
 }
